@@ -2,7 +2,14 @@ import {useState, useEffect} from "react";
 import ChartList from "../components/ChartList"
 
 const ChartBox = () =>  {
+    const chartUrls= {
+        all: "https://itunes.apple.com/gb/rss/topsongs/limit=20/json",
+        rock: "https://itunes.apple.com/gb/rss/topsongs/limit=20/genre=21/json",
+        dance: "https://itunes.apple.com/gb/rss/topsongs/limit=20/genre=17/json",
+        country: "https://itunes.apple.com/gb/rss/topsongs/limit=20/genre=6/json",
+    }
     const [chart, setChart] = useState([]);
+    const [chartType, setChartType] = useState("all");
 
     const getChartData = (url) => {
         fetch(url)
@@ -10,16 +17,10 @@ const ChartBox = () =>  {
             .then(data => setChart(data.feed.entry))
     }
     
-    useEffect(() => getChartData("https://itunes.apple.com/gb/rss/topsongs/limit=20/json"), []);
+    useEffect(() => getChartData(chartUrls[chartType]), [chartType]);
 
     const handleChange = (event) => {
-        const dict= {
-            all: "https://itunes.apple.com/gb/rss/topsongs/limit=20/json",
-            rock: "https://itunes.apple.com/gb/rss/topsongs/limit=20/genre=21/json",
-            dance: "https://itunes.apple.com/gb/rss/topsongs/limit=20/genre=17/json",
-            country: "https://itunes.apple.com/gb/rss/topsongs/limit=20/genre=6/json",
-        }
-        getChartData(dict[event.target.value])
+        setChartType(event.target.value);
     }
 
     return(
